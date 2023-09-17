@@ -1,7 +1,6 @@
 import java.io.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -13,7 +12,7 @@ public class Main {
             str+=readStr+" ";
         }
         String[] words = str.split(" ");
-        HashMap<String,Integer> hashMap= new HashMap<>();
+        Map<String,Integer> hashMap= new HashMap<>();
 
         for(String word:words){
             if(hashMap.containsKey(word)){
@@ -23,9 +22,20 @@ public class Main {
                 hashMap.put(word,1);
             }
         }
-        Collection<String> values = hashMap.keySet();
-        for (String value: values){
-            System.out.println(value + " " + hashMap.get(value));
+
+        //++++++++++++++++++++++++++++++
+        Map<String,Integer> sortedMap = hashMap.entrySet()
+                                                .stream()
+                                                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                                                .collect(Collectors.toMap(Map.Entry::getKey,
+                                                                          Map.Entry::getValue,
+                                                                          (e1,e2)->e1,
+                                                                           LinkedHashMap::new));
+
+
+        for(Map.Entry<String,Integer> entry: sortedMap.entrySet()){
+            System.out.println(entry.getKey() + " " +entry.getValue());
         }
+
     }
 }
